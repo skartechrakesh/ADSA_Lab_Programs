@@ -12,52 +12,48 @@ class LinkedList:
         new = Node(data)
         if not self.head:
             self.head = new
-        else:
-            temp = self.head
-            while temp.next:
-                temp = temp.next
-            temp.next = new
+            return
+        t = self.head
+        while t.next:
+            t = t.next
+        t.next = new
 
     def delete(self, key):
-        temp = self.head
-        prev = None
-        while temp:
-            if temp.data == key:
-                if prev:
-                    prev.next = temp.next
-                else:
-                    self.head = temp.next
+        t, prev = self.head, None
+        while t:
+            if t.data == key:
+                if prev: prev.next = t.next
+                else: self.head = t.next
                 print("Deleted")
                 return
-            prev = temp
-            temp = temp.next
+            prev, t = t, t.next
         print("Not found")
 
     def display(self):
-        temp = self.head
-        if not temp:
-            print("List empty")
-            return
-        while temp:
-            print(temp.data, end=" -> ")
-            temp = temp.next
+        t = self.head
+        while t:
+            print(t.data, end=" -> ")
+            t = t.next
         print("None")
 
 
-# -------- Menu --------
+# ---- default list ----
 l = LinkedList()
+for i in [10, 20, 30, 40, 50]:
+    l.insert(i)
 
+print("Initial:", end=" "); l.display()
+
+# ---- menu ----
 while True:
-    print("\n1.Insert \n2.Delete \n3.Display \n4.Exit\n")
+    print("\n1.Insert 2.Delete 3.Display 4.Exit")
     ch = int(input("Choice: "))
 
     if ch == 1:
-        l.insert(int(input("Enter value: ")))
+        l.insert(int(input("Value: ")))
     elif ch == 2:
-        l.delete(int(input("Enter value: ")))
+        l.delete(int(input("Value: ")))
     elif ch == 3:
         l.display()
-    elif ch == 4:
-        break
     else:
-        print("Invalid choice")
+        break

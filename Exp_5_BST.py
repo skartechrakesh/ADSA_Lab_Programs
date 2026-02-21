@@ -1,92 +1,111 @@
 class Node:
-    def __init__(self, key):
-        self.key = key
-        self.left = self.right = None
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
 
 
 class BST:
-    def insert(self, root, key):
-        if not root:
-            return Node(key)
-        if key < root.key:
-            root.left = self.insert(root.left, key)
+
+    # Insert
+    def insert(self, root, value):
+        if root is None:
+            return Node(value)
+
+        if value < root.value:
+            root.left = self.insert(root.left, value)
         else:
-            root.right = self.insert(root.right, key)
+            root.right = self.insert(root.right, value)
+
         return root
 
-    def search(self, root, key):
-        if not root:
+    # Search
+    def search(self, root, value):
+        if root is None:
             print("Not Found")
-        elif root.key == key:
+            return
+        if root.value == value:
             print("Found")
-        elif key < root.key:
-            self.search(root.left, key)
+            return
+        if value < root.value:
+            self.search(root.left, value)
         else:
-            self.search(root.right, key)
+            self.search(root.right, value)
 
-    def minValue(self, root):
-        while root.left:
-            root = root.left
-        return root
+    # Delete
+    def delete(self, root, value):
+        if root is None:
+            return None
 
-    def delete(self, root, key):
-        if not root:
-            return root
-        if key < root.key:
-            root.left = self.delete(root.left, key)
-        elif key > root.key:
-            root.right = self.delete(root.right, key)
+        if value < root.value:
+            root.left = self.delete(root.left, value)
+
+        elif value > root.value:
+            root.right = self.delete(root.right, value)
+
         else:
-            if not root.left:
+            if root.left is None:
                 return root.right
-            if not root.right:
+            if root.right is None:
                 return root.left
-            temp = self.minValue(root.right)
-            root.key = temp.key
-            root.right = self.delete(root.right, temp.key)
+
+            successor = root.right
+            while successor.left:
+                successor = successor.left
+
+            root.value = successor.value
+            root.right = self.delete(root.right, successor.value)
+
         return root
 
     # Traversals
     def inorder(self, root):
-        if root:
-            self.inorder(root.left)
-            print(root.key, end=" ")
-            self.inorder(root.right)
+        if root is None:
+            return []
+        return self.inorder(root.left) + [root.value] + self.inorder(root.right)
 
     def preorder(self, root):
-        if root:
-            print(root.key, end=" ")
-            self.preorder(root.left)
-            self.preorder(root.right)
+        if root is None:
+            return []
+        return [root.value] + self.preorder(root.left) + self.preorder(root.right)
 
     def postorder(self, root):
-        if root:
-            self.postorder(root.left)
-            self.postorder(root.right)
-            print(root.key, end=" ")
+        if root is None:
+            return []
+        return self.postorder(root.left) + self.postorder(root.right) + [root.value]
 
 
-# -------- Menu --------
+# -------- Main Program --------
 tree = BST()
 root = None
 
-while True:
-    print("\n1.Insert \n2.Delete \n3.Search \n4.Inorder \n5.Preorder \n6.Postorder \n7.Exit\n")
-    ch = int(input("Choice: "))
+# Input
+n = int(input("Enter number of elements: "))
+values = list(map(int, input("Enter elements (space separated): ").split()))
 
-    if ch == 1:
-        root = tree.insert(root, int(input("Enter value: ")))
-    elif ch == 2:
-        root = tree.delete(root, int(input("Enter value: ")))
-    elif ch == 3:
+for i in values[:n]:
+    root = tree.insert(root, i)
+
+# Initial Traversals
+print("\nTraversals after insertion")
+print("Inorder  :", tree.inorder(root))
+print("Preorder :", tree.preorder(root))
+print("Postorder:", tree.postorder(root))
+
+# Operations
+while True:
+    print("\n1.Search  2.Delete  3.Exit")
+    choice = int(input("Choice: "))
+
+    if choice == 1:
         tree.search(root, int(input("Enter value: ")))
-    elif ch == 4:
-        tree.inorder(root); print()
-    elif ch == 5:
-        tree.preorder(root); print()
-    elif ch == 6:
-        tree.postorder(root); print()
-    elif ch == 7:
-        break
+
+    elif choice == 2:
+        root = tree.delete(root, int(input("Enter value: ")))
+        print("\nTraversals after deletion")
+        print("Inorder  :", tree.inorder(root))
+        print("Preorder :", tree.preorder(root))
+        print("Postorder:", tree.postorder(root))
+
     else:
-        print("Invalid choice")
+        break
