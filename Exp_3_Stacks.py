@@ -28,7 +28,7 @@ class Stack:
 st = Stack()
 
 while True:
-    print("\n1.Push \n2.Pop \n3.Peek \n4.Display \n5.Exit\n")
+    print("\n1.Push 2.Pop 3.Peek 4.Display 5.Exit")
     ch = int(input("Choice: "))
 
     if ch == 1:

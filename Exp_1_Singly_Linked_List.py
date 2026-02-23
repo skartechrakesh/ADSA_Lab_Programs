@@ -8,7 +8,13 @@ class LinkedList:
     def __init__(self):
         self.head = None
 
-    def insert(self, data):
+    # ---------- INSERTION ----------
+    def insert_begin(self, data):
+        new = Node(data)
+        new.next = self.head
+        self.head = new
+
+    def insert_end(self, data):
         new = Node(data)
         if not self.head:
             self.head = new
@@ -18,17 +24,64 @@ class LinkedList:
             t = t.next
         t.next = new
 
-    def delete(self, key):
-        t, prev = self.head, None
-        while t:
-            if t.data == key:
-                if prev: prev.next = t.next
-                else: self.head = t.next
-                print("Deleted")
-                return
-            prev, t = t, t.next
-        print("Not found")
+    def insert_pos(self, data, pos):
+        new = Node(data)
+        if pos == 1:
+            new.next = self.head
+            self.head = new
+            return
 
+        t = self.head
+        for i in range(pos - 2):
+            if not t:
+                print("Invalid Position")
+                return
+            t = t.next
+
+        new.next = t.next
+        t.next = new
+
+    # ---------- DELETION ----------
+    def delete_begin(self):
+        if not self.head:
+            print("List Empty")
+            return
+        self.head = self.head.next
+
+    def delete_end(self):
+        if not self.head:
+            print("List Empty")
+            return
+        if not self.head.next:
+            self.head = None
+            return
+        t = self.head
+        while t.next.next:
+            t = t.next
+        t.next = None
+
+    def delete_pos(self, pos):
+        if not self.head:
+            print("List Empty")
+            return
+        if pos == 1:
+            self.head = self.head.next
+            return
+
+        t = self.head
+        for i in range(pos - 2):
+            if not t.next:
+                print("Invalid Position")
+                return
+            t = t.next
+
+        if not t.next:
+            print("Invalid Position")
+            return
+
+        t.next = t.next.next
+
+    # ---------- DISPLAY ----------
     def display(self):
         t = self.head
         while t:
@@ -37,23 +90,47 @@ class LinkedList:
         print("None")
 
 
-# ---- default list ----
+# --------- INITIAL LIST CREATION ---------
 l = LinkedList()
+
+# Creating list initially in the code
 for i in [10, 20, 30, 40, 50]:
-    l.insert(i)
+    l.insert_end(i)
 
-print("Initial:", end=" "); l.display()
+print("Initial Linked List:")
+l.display()
 
-# ---- menu ----
+# --------- MENU ---------
 while True:
-    print("\n1.Insert 2.Delete 3.Display 4.Exit")
+    print("\n1.Insert Begin 2.Insert End 3.Insert Position")
+    print("4.Delete Begin 5.Delete End 6.Delete Position")
+    print("7.Display 8.Exit")
+
     ch = int(input("Choice: "))
 
     if ch == 1:
-        l.insert(int(input("Value: ")))
+        l.insert_begin(int(input("Value: ")))
+
     elif ch == 2:
-        l.delete(int(input("Value: ")))
+        l.insert_end(int(input("Value: ")))
+
     elif ch == 3:
+        val = int(input("Value: "))
+        pos = int(input("Position: "))
+        l.insert_pos(val, pos)
+
+    elif ch == 4:
+        l.delete_begin()
+
+    elif ch == 5:
+        l.delete_end()
+
+    elif ch == 6:
+        pos = int(input("Position: "))
+        l.delete_pos(pos)
+
+    elif ch == 7:
         l.display()
+
     else:
         break
